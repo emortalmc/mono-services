@@ -1,14 +1,17 @@
-FROM --platform=$BUILDPLATFORM golang:1.20-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS build
+
+ARG SERVICE_NAME=mc-player-service
 
 WORKDIR /build
 
-## Copy go.mod and go.sum files, download dependencies so they are cached
-COPY go.mod go.sum ./
+# Copy sources
+COPY . .
+
+WORKDIR /build/services/$SERVICE_NAME
 
 RUN go mod download
 
-# Copy sources
-COPY . .
+WORKDIR /build
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -18,11 +21,13 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     CGO_ENABLED=0 \
     GOOS=$TARGETOS \
     GOARCH=$TARGETARCH \
-    go build -ldflags="-s -w" -o mc-player-service ./cmd/mc-player-service
+    go build -ldflags="-s -w" -o $SERVICE_NAME ./services/$SERVICE_NAME/cmd/$SERVICE_NAME
 
 FROM alpine
 
+ARG SERVICE_NAME=mc-player-service
+
 WORKDIR /app
 
-COPY --from=build /build/mc-player-service /build/run/ ./
-CMD ["./mc-player-service"]
+COPY --from=build /build/$SERVICE_NAME /build/services/$SERVICE_NAME/run ./
+CMD ["./$SERVICE_NAME"]

@@ -2,13 +2,13 @@ package clients
 
 import (
 	"fmt"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/config"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/badge"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/mcplayer"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/permission"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/relationship"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"message-handler/internal/config"
 )
 
 func NewRelationshipClient(cfg *config.RelationshipServiceConfig) (relationship.RelationshipClient, error) {

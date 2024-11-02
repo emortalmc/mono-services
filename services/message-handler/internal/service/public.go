@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/config"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/kafka"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/mcplayer"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/messagehandler"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/relationship"
@@ -12,8 +14,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
-	"message-handler/internal/config"
-	"message-handler/internal/kafka"
 	"net"
 	"sync"
 )

@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/kafka"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/mcplayer"
 	pb "github.com/emortalmc/proto-specs/gen/go/grpc/messagehandler"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/relationship"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"message-handler/internal/kafka"
 )
 
 type privateMessageService struct {

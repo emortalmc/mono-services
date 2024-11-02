@@ -3,12 +3,12 @@ package kafka
 import (
 	"context"
 	"fmt"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/config"
 	pbmsg "github.com/emortalmc/proto-specs/gen/go/message/messagehandler"
 	pbmodel "github.com/emortalmc/proto-specs/gen/go/model/messagehandler"
 	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
-	"message-handler/internal/config"
 	"time"
 )
 

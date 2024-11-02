@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/emortalmc/mono-services/services/message-handler/internal/app"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/config"
 	"go.uber.org/zap"
 	"log"
-	"message-handler/internal/app"
-	"message-handler/internal/config"
 )
 
 func main() {

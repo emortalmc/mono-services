@@ -2,11 +2,11 @@ package app
 
 import (
 	"context"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/clients"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/config"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/kafka"
+	"github.com/emortalmc/mono-services/services/message-handler/internal/service"
 	"go.uber.org/zap"
-	"message-handler/internal/clients"
-	"message-handler/internal/config"
-	"message-handler/internal/kafka"
-	"message-handler/internal/service"
 	"os/signal"
 	"sync"
 	"syscall"
