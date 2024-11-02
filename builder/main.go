@@ -139,7 +139,7 @@ func getModules() ([]string, error) {
 }
 
 func getChangedFiles(lastSuccessfulBuildSha string) ([]string, error) {
-	cmd := exec.Command("git", "diff", "--name-only", lastSuccessfulBuildSha)
+	cmd := exec.Command("git", "diff", "--name-only", lastSuccessfulBuildSha, currentSha)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	var stderr bytes.Buffer
