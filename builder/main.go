@@ -3,19 +3,72 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
 )
 
 const (
-	goWorkFile    = "go.work"
 	libsPath      = "libraries"
 	servicesPath  = "services"
 	packagePrefix = "github.com/emortalmc/mono-services/"
 )
+
+var currentSha = os.Getenv("GITHUB_SHA")
+var githubAPIURL = generateGitHubAPIURL()
+
+func generateGitHubAPIURL() string {
+	const baseURL = "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/runs?branch=${{ github.ref_name }}&status=success&per_page=1"
+
+	url := baseURL
+	url = strings.ReplaceAll(url, "${{ github.repository }}", os.Getenv("GITHUB_REPOSITORY"))
+	url = strings.ReplaceAll(url, "${{ github.workflow }}", os.Getenv("GITHUB_WORKFLOW"))
+	url = strings.ReplaceAll(url, "${{ github.ref_name }}", os.Getenv("GITHUB_REF_NAME"))
+	return url
+}
+
+var NoRunsError = fmt.Errorf("no successful runs found")
+
+func getLastSuccessfulBuildSha() (string, error) {
+	gitHubToken := os.Getenv("GITHUB_TOKEN")
+
+	req, err := http.NewRequest("GET", githubAPIURL, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
+
+	if gitHubToken != "" {
+		req.Header.Set("Authorization", "Bearer "+gitHubToken)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to send request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to get last successful build sha: %s", resp.Status)
+	}
+
+	var data map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return "", fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	runs := data["workflow_runs"].([]interface{})
+	if len(runs) == 0 {
+		return "", NoRunsError
+	}
+
+	sha := runs[0].(map[string]interface{})["head_sha"].(string)
+	return sha, nil
+}
 
 // getModules returns the list of modules referenced in the go work file.
 // The return should be a list of modules in the format "services/mc-player-service", "libraries/libA", etc.
@@ -45,8 +98,8 @@ func getModules() ([]string, error) {
 	return modules, nil
 }
 
-func getChangedFiles() ([]string, error) {
-	cmd := exec.Command("git", "diff", "--name-only", "HEAD^", "HEAD")
+func getChangedFiles(lastSuccessfulBuildSha string) ([]string, error) {
+	cmd := exec.Command("git", "diff", "--name-only", lastSuccessfulBuildSha, currentSha)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	var stderr bytes.Buffer
@@ -134,12 +187,34 @@ func validateDependencyGraph(graph DependencyGraph) {
 // 4. Get the dependencies of the changed modules
 // 5. Build the changed services or services that depend on the changed libraries
 func main() {
-	changedFiles, err := getChangedFiles()
+	modules, err := getModules()
 	if err != nil {
 		panic(err)
 	}
 
-	modules, err := getModules()
+	lastSuccessfulBuildSha, err := getLastSuccessfulBuildSha()
+	if err != nil {
+		if errors.Is(err, NoRunsError) { // if no runs, build all services
+			servicesToBuild := make([]string, 0)
+			for _, module := range modules {
+				if strings.HasPrefix(module, servicesPath) {
+					servicesToBuild = append(servicesToBuild, strings.TrimPrefix(module, "services/"))
+				}
+			}
+
+			jsonOutput, err := json.Marshal(servicesToBuild)
+			if err != nil {
+				log.Fatalf("failed to marshal services to build: %v", err)
+			}
+
+			fmt.Println(string(jsonOutput))
+			return
+		} else {
+			panic(err)
+		}
+	}
+
+	changedFiles, err := getChangedFiles(lastSuccessfulBuildSha)
 	if err != nil {
 		panic(err)
 	}

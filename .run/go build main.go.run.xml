@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+    <module name="mono-services-custom" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="GITHUB_REPOSITORY" value="emortalmc/mono-services" />
+      <env name="GITHUB_WORKFLOW" value="build.yaml" />
+      <env name="GITHUB_REF_NAME" value="main" />
+    </envs>
+    <kind value="FILE" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/builder/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
