@@ -18,8 +18,27 @@ const (
 	packagePrefix = "github.com/emortalmc/mono-services/"
 )
 
-var currentSha = os.Getenv("GITHUB_SHA")
+var currentSha = generateCurrentSha()
 var githubAPIURL = generateGitHubAPIURL()
+
+func generateCurrentSha() string {
+	sha := os.Getenv("GITHUB_SHA")
+	if sha != "" {
+		return sha
+	}
+
+	cmd := exec.Command("git", "rev-parse", "HEAD")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	if err := cmd.Run(); err != nil {
+		log.Fatalf("failed to get current sha: %s: %v", stderr.String(), err)
+	}
+
+	return strings.TrimSpace(out.String())
+}
 
 func generateGitHubAPIURL() string {
 	const baseURL = "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/runs?branch=${{ github.ref_name }}&status=success&per_page=1"
@@ -101,22 +120,26 @@ func getModules() ([]string, error) {
 	}
 
 	rawModules := strings.Split(out.String(), "\n")
-	modules := make([]string, len(rawModules))
-	for i, module := range rawModules {
-		wd, err := os.Getwd()
-		if err != nil {
-			return nil, fmt.Errorf("failed to get working directory: %w", err)
-		}
-		wd += string(os.PathSeparator)
+	modules := make([]string, 0, len(rawModules))
 
-		modules[i] = strings.TrimPrefix(module, wd)
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get working directory: %w", err)
+	}
+
+	for _, module := range rawModules {
+		if module == "" || module == wd {
+			continue
+		}
+
+		modules = append(modules, strings.TrimPrefix(module, wd+string(os.PathSeparator)))
 	}
 
 	return modules, nil
 }
 
 func getChangedFiles(lastSuccessfulBuildSha string) ([]string, error) {
-	cmd := exec.Command("git", "diff", "--name-only", lastSuccessfulBuildSha, currentSha)
+	cmd := exec.Command("git", "diff", "--name-only", lastSuccessfulBuildSha)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	var stderr bytes.Buffer
@@ -148,11 +171,14 @@ out:
 type DependencyGraph map[string][]string
 
 func getModuleDependencies(module string) ([]string, error) {
-	cmd := exec.Command("go", "list", "-m", "all", packagePrefix+module)
+	cmd := exec.Command("go", "list", "-m", "-f", "{{.Path}}", "all")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
+
+	cmd.Dir = module
+	cmd.Env = append(cmd.Env, "GOWORK=off")
 
 	if err := cmd.Run(); err != nil {
 		return nil, fmt.Errorf("failed to get dependencies for module %s: %s: %w", module, stderr.String(), err)
@@ -163,10 +189,11 @@ func getModuleDependencies(module string) ([]string, error) {
 
 	for _, line := range lines {
 		dep := strings.TrimSpace(line)
-		if dep == "" || !strings.HasPrefix(dep, packagePrefix) {
+		if !strings.HasPrefix(dep, packagePrefix) || dep == packagePrefix+module {
 			continue
 		}
-		dependencies = append(dependencies, dep)
+
+		dependencies = append(dependencies, strings.TrimPrefix(dep, packagePrefix))
 	}
 
 	return dependencies, nil
@@ -268,7 +295,7 @@ out:
 
 		for _, dep := range deps {
 			if contains(changedModules, dep) {
-				servicesToBuild = append(servicesToBuild, module)
+				servicesToBuild = append(servicesToBuild, strings.TrimPrefix(module, "services/"))
 				break out
 			}
 		}
