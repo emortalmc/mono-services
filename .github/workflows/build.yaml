@@ -7,3 +7,75 @@ on:
 
 jobs:
   lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.23
+          cache: false
+      - uses: actions/checkout@v4
+      - name: go-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          args: --timeout 5m0s
+
+  # Detect services that need to be built via the builder
+  detect-services:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.detect-services.outputs.services }}
+    steps:
+      - uses: actions/checkout@v4
+        # Setup Go so we can run the builder
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.23
+          cache: false
+      - name: detect-services
+        id: detect-services
+        run: |
+          services=$(go run builder/main.go)
+          echo "::set-output name=services::${services}"
+
+  build-and-publish:
+    needs: [detect-services, lint]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.detect-services.outputs.services) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Identify Environment"
+        shell: bash
+        run: |
+          tag_prefix="ghcr.io/emortalmc/${{ matrix.service }}"
+          tags=""
+
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            tags="$tag_prefix:${{ github.sha }},$tag_prefix:latest"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            tags="$tag_prefix:pr-${{ github.event.number }},$tag_prefix:${{github.event.pull_request.head.sha}}"
+          fi
+
+          echo "DOCKER_TAGS=$tags" >> "$GITHUB_ENV"
+
+      - name: "Login to container registry"
+        uses: "docker/login-action@v2"
+        with:
+          registry: "ghcr.io"
+          username: "${{ github.actor }}"
+          password: "${{ secrets.REGISTRY_PASSWORD }}"
+
+      - name: "Set up Docker Buildx"
+        uses: "docker/setup-buildx-action@v2"
+
+      - name: "Build and push"
+        uses: "docker/build-push-action@v4"
+        with:
+          context: "./services/${{ matrix.service }}"
+          file: "./services/${{ matrix.service }}/Dockerfile"
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ env.DOCKER_TAGS }}

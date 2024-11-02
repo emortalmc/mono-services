@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -27,9 +29,15 @@ func getModules() ([]string, error) {
 	}
 
 	rawModules := strings.Split(out.String(), "\n")
-	modules := make([]string, 0, len(rawModules))
-	for _, module := range rawModules {
-		modules = append(modules, strings.Split(module, "github.com/emortalmc/mono-services/")[1])
+	modules := make([]string, len(rawModules))
+	for i, module := range rawModules {
+		wd, err := os.Getwd()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get working directory: %w", err)
+		}
+		wd += string(os.PathSeparator)
+
+		modules[i] = strings.TrimPrefix(module, wd)
 	}
 
 	return modules, nil
@@ -102,6 +110,17 @@ func buildDependencyGraph(modules []string) (DependencyGraph, error) {
 	return graph, nil
 }
 
+// validateDependencyGraph checks that no services depend on other services. Crashes out if it finds a service dependency.
+func validateDependencyGraph(graph DependencyGraph) {
+	for module, deps := range graph {
+		for _, dep := range deps {
+			if strings.HasPrefix(dep, servicesPath) {
+				log.Fatalf("service %s was depended on by %s. Services cannot be dependencies", dep, module)
+			}
+		}
+	}
+}
+
 // Our process is as follows:
 // 1. Get the list of changed files
 // 2. Get the list of modules (libraries and services) referenced in the go work file
@@ -118,49 +137,49 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("modules: %v\n", modules)
+	//fmt.Printf("modules: %v\n", modules)
 
 	changedModules, err := getChangedModules(modules, changedFiles)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("changed modules: %v\n", changedModules)
+	//fmt.Printf("changed modules: %v\n", changedModules)
 
 	graph, err := buildDependencyGraph(modules)
 
 	// Flag any problems with dependencies
-	for module, deps := range graph {
-		for _, dep := range deps {
-			if strings.HasPrefix(dep, servicesPath) {
-				log.Fatalf("service %s was depended on by %s. Services cannot be dependencies.", dep, module)
-			}
-		}
-	}
+	validateDependencyGraph(graph)
 
-	// create modulesToBuild with changed services. Libraries are handled differently as they're just dependencies.
-	modulesToBuild := make([]string, 0)
+	// create servicesToBuild with changed services. Libraries are handled differently as they're just dependencies.
+	servicesToBuild := make([]string, 0)
 	for _, module := range changedModules {
 		if strings.HasPrefix(module, servicesPath) {
-			modulesToBuild = append(modulesToBuild, module)
+			servicesToBuild = append(servicesToBuild, strings.TrimPrefix(module, "services/"))
 		}
 	}
 
 	// Add any additional services that depend on the changed libraries
 out:
 	for module, deps := range graph {
-		if contains(modulesToBuild, module) { // Skip modules that are already in modulesToBuild
+		if contains(servicesToBuild, strings.TrimPrefix(module, "services/")) { // Skip modules that are already in servicesToBuild
 			continue
 		}
 
 		for _, dep := range deps {
 			if contains(changedModules, dep) {
-				modulesToBuild = append(modulesToBuild, module)
+				servicesToBuild = append(servicesToBuild, module)
 				break out
 			}
 		}
 	}
 
-	fmt.Printf("modules to build: %v\n", modulesToBuild)
+	//fmt.Printf("modules to build: %v\n", servicesToBuild)
+	jsonOutput, err := json.Marshal(servicesToBuild)
+	if err != nil {
+		log.Fatalf("failed to marshal services to build: %v", err)
+	}
+
+	fmt.Println(string(jsonOutput))
 }
 
 func contains(s []string, e string) bool {
