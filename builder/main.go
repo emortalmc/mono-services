@@ -23,9 +23,11 @@ func getModules() ([]string, error) {
 	cmd := exec.Command("go", "list", "-m", "-f", "{{.Dir}}")
 	var out bytes.Buffer
 	cmd.Stdout = &out
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		return nil, fmt.Errorf("failed to get modules: %w", err)
+		return nil, fmt.Errorf("failed to get modules: %s: %w", stderr.String(), err)
 	}
 
 	rawModules := strings.Split(out.String(), "\n")
@@ -47,9 +49,11 @@ func getChangedFiles() ([]string, error) {
 	cmd := exec.Command("git", "diff", "--name-only", "HEAD^", "HEAD")
 	var out bytes.Buffer
 	cmd.Stdout = &out
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		return nil, fmt.Errorf("failed to get changed files: %w", err)
+		return nil, fmt.Errorf("failed to get changed files: %s: %w", stderr.String(), err)
 	}
 
 	return strings.Split(out.String(), "\n"), nil
@@ -77,9 +81,11 @@ func getModuleDependencies(module string) ([]string, error) {
 	cmd := exec.Command("go", "list", "-m", "all", packagePrefix+module)
 	var out bytes.Buffer
 	cmd.Stdout = &out
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		return nil, fmt.Errorf("failed to get dependencies for module %s: %w", module, err)
+		return nil, fmt.Errorf("failed to get dependencies for module %s: %s: %w", module, stderr.String(), err)
 	}
 
 	lines := strings.Split(out.String(), "\n")
