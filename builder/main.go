@@ -146,6 +146,9 @@ func main() {
 	//fmt.Printf("changed modules: %v\n", changedModules)
 
 	graph, err := buildDependencyGraph(modules)
+	if err != nil {
+		panic(err)
+	}
 
 	// Flag any problems with dependencies
 	validateDependencyGraph(graph)
