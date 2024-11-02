@@ -26,7 +26,7 @@ func generateGitHubAPIURL() string {
 
 	gitHubRef := os.Getenv("GITHUB_REF") // octocat/hello-world/.github/workflows/my-workflow.yml@refs/heads/my_branch
 	for _, part := range strings.Split(gitHubRef, "/") {
-		if strings.Contains(gitHubRef, ".yaml") || strings.Contains(gitHubRef, ".yml") {
+		if strings.Contains(part, ".yaml") || strings.Contains(part, ".yml") {
 			gitHubRef = part
 			break
 		}
