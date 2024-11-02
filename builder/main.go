@@ -24,9 +24,14 @@ var githubAPIURL = generateGitHubAPIURL()
 func generateGitHubAPIURL() string {
 	const baseURL = "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/runs?branch=${{ github.ref_name }}&status=success&per_page=1"
 
-	gitHubRef := os.Getenv("GITHUB_REF") // octocat/hello-world/.github/workflows/my-workflow.yml@refs/heads/my_branch
-	for _, part := range strings.Split(gitHubRef, "/") {
+	gitHubRef := os.Getenv("GITHUB_WORKFLOW_REF") // octocat/hello-world/.github/workflows/my-workflow.yml@refs/heads/my_branch
+	parts := strings.Split(gitHubRef, "/")
+	//log.Printf("parts: %v\n", parts)
+	//log.Printf("original ref: %s\n", gitHubRef)
+	for _, part := range parts {
+		//log.Printf("part: %s\n", part)
 		if strings.Contains(part, ".yaml") || strings.Contains(part, ".yml") {
+			//log.Printf("found ref: %s\n", part)
 			gitHubRef = part
 			break
 		}

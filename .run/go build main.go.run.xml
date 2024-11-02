@@ -3,9 +3,9 @@
     <module name="mono-services-custom" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>
+      <env name="GITHUB_REF" value="octocat/hello-world/.github/workflows/build.yaml@refs/heads/my_branch" />
       <env name="GITHUB_REPOSITORY" value="emortalmc/mono-services" />
-      <env name="GITHUB_WORKFLOW" value="build.yaml" />
-      <env name="GITHUB_REF_NAME" value="main" />
+      <env name="GITHUB_WORKFLOW_REF" value="build.yaml" />
     </envs>
     <kind value="FILE" />
     <directory value="$PROJECT_DIR$" />
