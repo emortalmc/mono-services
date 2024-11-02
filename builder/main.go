@@ -53,7 +53,7 @@ func getLastSuccessfulBuildSha() (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("failed to get last successful build sha: %s", resp.Status)
+		return "", fmt.Errorf("failed to get last successful build sha (URL: %s): %s", githubAPIURL, resp.Status)
 	}
 
 	var data map[string]interface{}
