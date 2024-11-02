@@ -1,6 +1,6 @@
 module github.com/emortalmc/mono-services/services/message-handler
 
-go 1.23.2
+go 1.23
 
 require (
 	github.com/emortalmc/proto-specs/gen/go v0.0.0-20240927103241-2584fd28e0f9

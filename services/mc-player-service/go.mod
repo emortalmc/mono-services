@@ -1,6 +1,6 @@
 module github.com/emortalmc/mono-services/services/mc-player-service
 
-go 1.23.2
+go 1.23
 
 replace github.com/emortalmc/mono-services/libraries/test => ../../libraries/test
 
