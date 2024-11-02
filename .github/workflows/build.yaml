@@ -1,0 +1,9 @@
+name: "Build and push"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request: {}
+
+jobs:
+  lint:

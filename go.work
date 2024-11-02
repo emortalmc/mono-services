@@ -1,0 +1,7 @@
+go 1.23.2
+
+use (
+	./libraries/test
+	./services/mc-player-service
+	./services/message-handler
+)

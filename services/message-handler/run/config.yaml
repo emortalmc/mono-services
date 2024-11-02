@@ -1,0 +1,23 @@
+development: true
+
+kafka:
+  host: localhost
+  port: 9092
+
+relationshipService:
+  host: localhost
+  port: 10002
+
+playerTrackerService:
+  host: localhost
+  port: 10004
+
+badgeService:
+  host: localhost
+  port: 10004
+
+permissionService:
+  host: localhost
+  port: 10001
+
+port: 10003

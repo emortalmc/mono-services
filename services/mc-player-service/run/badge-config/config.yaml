@@ -1,0 +1,203 @@
+badges:
+  emortal:
+    id: emortal
+    priority: 100
+    required: true
+    friendlyName: "Emortal"
+    chatString: "\uE005"
+
+    hoverText:
+      - "<gold>Badge: <gradient:#c77800:#c400bd>Emortal</gradient></gold>"
+      - ""
+      - "<gold>A more important staff member of EmortalMC</gold>"
+
+    guiItem:
+      material: "minecraft:magenta_concrete"
+      displayName: "<i:false><gradient:#c77800:#c400bd>Emortal</gradient> \uE005"
+      lore:
+        - "<i:false><gold>A more important staff member of EmortalMC</gold>"
+
+    automaticGrants:
+      permissionRole: "owner"
+
+  staff:
+    id: staff
+    priority: 200
+    required: true
+    friendlyName: "Staff"
+    chatString: "\uE006"
+
+    hoverText:
+      - "<gold>Badge: <dark_purple>Staff</dark_purple></gold>"
+      - ""
+      - "<gold>A staff member of EmortalMC</gold>"
+
+    guiItem:
+      material: "minecraft:shield"
+      displayName: "<i:false><dark_purple>Staff</dark_purple> \uE006"
+      lore:
+        - "<i:false><gold>A staff member of EmortalMC</gold>"
+
+    automaticGrants:
+      permissionRole: "staff"
+
+  contributor_4:
+    id: contributor_4
+    priority: 300
+    required: false
+    friendlyName: "Contributor (x4)"
+    chatString: "\uE00A"
+
+    hoverText:
+      - "<gold>Badge: <gradient:#c77800:#c400bd>Contributor (x4)</gradient></gold>"
+      - ""
+      - "<gold>Has 32 merged pull requests to EmortalMC repositories</gold>"
+
+    guiItem:
+      material: "minecraft:netherite_pickaxe"
+      displayName: "<i:false><gradient:#c77800:#c400bd>Contributor (x4)</gradient> \uE00A"
+      lore:
+        - "<i:false><gold>Has 32 merged pull requests to EmortalMC repositories</gold>"
+
+  contributor_3:
+    id: contributor_3
+    priority: 400
+    required: false
+    friendlyName: "Contributor (x3)"
+    chatString: "\uE009"
+
+    hoverText:
+      - "<gold>Badge: <color:#c48300>Contributor (x3)</color></gold>"
+      - ""
+      - "<gold>Has 16 merged pull requests to EmortalMC repositories</gold>"
+
+    guiItem:
+      material: "minecraft:golden_pickaxe"
+      displayName: "<i:false><color:#c48300>Contributor (x3)</color> \uE009"
+      lore:
+        - "<i:false><gold>Has 16 merged pull requests to EmortalMC repositories</gold>"
+
+  contributor_2:
+    id: contributor_2
+    priority: 500
+    required: false
+    friendlyName: "Contributor (x2)"
+    chatString: "\uE008"
+
+    hoverText:
+      - "<gold>Badge: <color:#bababa>Contributor (x2)</color></gold>"
+      - ""
+      - "<gold>Has 8 merged pull requests to EmortalMC repositories</gold>"
+
+    guiItem:
+      material: "minecraft:iron_pickaxe"
+      displayName: "<i:false><color:#bababa>Contributor (x2)</color> \uE008"
+      lore:
+        - "<i:false><gold>Has 8 merged pull requests to EmortalMC repositories</gold>"
+
+  contributor_1:
+    id: contributor_1
+    priority: 600
+    required: false
+    friendlyName: "Contributor (x1)"
+    chatString: "\uE007"
+
+    hoverText:
+      - "<gold>Badge: <color:#cd7f32>Contributor (x1)</color></gold>"
+      - ""
+      - "<gold>Has 2 merged pull requests to EmortalMC repositories</gold>"
+
+    guiItem:
+      material: "minecraft:wooden_pickaxe"
+      displayName: "<i:false><color:#cd7f32>Contributor (x1)</color> \uE007"
+      lore:
+        - "<i:false><gold>Has 2 merged pull requests to EmortalMC repositories</gold>"
+
+  allu:
+    id: allu
+    priority: 650
+    required: false
+    friendlyName: "Allu"
+    chatString: ":)"
+
+    hoverText:
+      - "<gold>Badge: <white>Allu</white></gold>"
+      - ""
+      - "<gold>Turns out begging and bribery works!</gold>"
+
+    guiItem:
+      material: "minecraft:blue_wool" # replace with sunglasses item when added
+      displayName: "<i:false><aqua>Allu</aqua> :)"
+      lore:
+        - "<i:false><gold>Turns out begging and bribery works!</gold>"
+
+  cool:
+    id: cool
+    priority: 700
+    required: false
+    friendlyName: "Cool"
+    chatString: "\uE00B"
+
+    hoverText:
+      - "<gold>Badge: <white>Cool</white></gold>"
+      - ""
+      - "<gold>Is cool</gold>"
+
+    guiItem:
+      material: "minecraft:bedrock" # replace with sunglasses item when added
+      displayName: "<i:false><white>Cool</white> \uE00B"
+      lore:
+        - "<i:false><gold>Is cool</gold>"
+
+  birthday_23:
+    id: birthday_23
+    priority: 750
+    required: false
+    friendlyName: "Birthday 2023"
+    chatString: "\uE00C"
+
+    hoverText:
+      - "<gold>Badge: <light_purple>Birthday 2023</light_purple></gold>"
+      - ""
+      - "<gold>Joined during the 2023 birthday event</gold>"
+
+    guiItem:
+      material: "minecraft:cake"
+      displayName: "<i:false><light_purple>Birthday 2023</light_purple> \uE00C"
+      lore:
+        - "<i:false><gold>Joined during the 2023 birthday event</gold>"
+
+  loser:
+    id: loser
+    priority: 800
+    required: true
+    friendlyName: "Absolute Loser"
+    chatString: "\uE00D"
+
+    hoverText:
+      - "<gold>Badge: <color:#7b5c00>Absolute Loser</color></gold>"
+      - ""
+      - "<gold>Someone with this rank is an absolute loser and is not to be spoken to</gold>"
+
+    guiItem:
+      material: "minecraft:brown_wool"
+      displayName: "<i:false><color:#7b5c00>Absolute Loser</color> \uE00D"
+      lore:
+        - "<i:false><gold>Someone with this rank is an absolute loser and is not to be spoken to</gold>"
+
+  hollowcube:
+    id: hollowcube
+    priority: 99999999 # Doesn't matter because we're hiding it in the GUI
+    required: false
+    friendlyName: "HollowCube"
+    chatString: "\uE011"
+
+    hoverText:
+      - "<gold>Badge: <color:#7b5c00>HollowCube</color></gold>"
+      - ""
+      - "<gold>Someone with this rank is an absolute loser and is not to be spoken to</gold>"
+
+    guiItem:
+      material: "minecraft:air"
+      displayName: ""
+      lore: []
