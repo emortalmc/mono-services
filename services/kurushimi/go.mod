@@ -8,6 +8,7 @@ require (
 	github.com/emortalmc/proto-specs/gen/go v0.0.0-20240927103241-2584fd28e0f9
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
+	github.com/segmentio/kafka-go v0.4.47
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.19.0
 	go.mongodb.org/mongo-driver v1.17.1
@@ -52,7 +53,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
-	github.com/segmentio/kafka-go v0.4.47 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
