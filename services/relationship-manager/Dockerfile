@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS build
 
-ARG SERVICE_NAME=relationship-manager-service
+ARG SERVICE_NAME=relationship-manager
 
 WORKDIR /build
 
@@ -25,9 +25,9 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 FROM alpine
 
-ARG SERVICE_NAME=relationship-manager-service
+ARG SERVICE_NAME=relationship-manager
 
 WORKDIR /app
 
 COPY --from=build /build/$SERVICE_NAME /build/services/$SERVICE_NAME/run ./
-CMD ["./relationship-manager-service"]
+CMD ["./relationship-manager"]
