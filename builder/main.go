@@ -44,11 +44,11 @@ func generateGitHubAPIURL() string {
 	const baseURL = "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/runs?branch=${{ github.ref_name }}&status=success&per_page=1"
 
 	gitHubRef := os.Getenv("GITHUB_WORKFLOW_REF") // octocat/hello-world/.github/workflows/my-workflow.yml@refs/heads/my_branch
-	log.Printf("workflow ref: %s\n", gitHubRef)
+	//log.Printf("workflow ref: %s\n", gitHubRef)
 	parts := strings.Split(gitHubRef, "/")
 	for _, part := range parts {
 		if strings.Contains(part, ".yaml") || strings.Contains(part, ".yml") {
-			log.Printf("found short ref: %s\n", part)
+			//log.Printf("found short ref: %s\n", part)
 			gitHubRef = part
 			break
 		}
@@ -137,7 +137,7 @@ func getModules() ([]string, error) {
 }
 
 func getChangedFiles(lastSuccessfulBuildSha string) ([]string, error) {
-	log.Printf("getting changed files between '%s' and '%s'\n", lastSuccessfulBuildSha, currentSha)
+	//log.Printf("getting changed files between '%s' and '%s'\n", lastSuccessfulBuildSha, currentSha)
 	cmd := exec.Command("git", "diff", "--name-only", lastSuccessfulBuildSha, currentSha)
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -261,13 +261,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	log.Printf("modules: %v\n", modules)
+	//log.Printf("modules: %v\n", modules)
 
 	changedModules, err := getChangedModules(modules, changedFiles)
 	if err != nil {
 		panic(err)
 	}
-	log.Printf("changed modules: %v\n", changedModules)
+	//log.Printf("changed modules: %v\n", changedModules)
 
 	graph, err := buildDependencyGraph(modules)
 	if err != nil {
