@@ -38,7 +38,7 @@ jobs:
         id: detect-services
         run: |
           services=$(go run builder/main.go)
-          echo "services=$services >> $GITHUB_OUTPUT"
+          echo "services=$services" >> $GITHUB_OUTPUT
 
   build-and-publish:
     needs: [detect-services, lint]
