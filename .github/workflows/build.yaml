@@ -88,7 +88,7 @@ jobs:
           tags: ${{ env.DOCKER_TAGS }}
 
   deploy:
-    needs: [build-and-publish]
+    needs: [build-and-publish, detect-services]
     runs-on: ubuntu-latest
     env:
       SERVICES: ${{ needs.detect-services.outputs.services }}
