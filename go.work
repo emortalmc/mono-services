@@ -7,5 +7,6 @@ use (
 	./services/matchmaker
 	./services/mc-player-service
 	./services/message-handler
+	./services/permission-service
 	./services/relationship-manager
 )
