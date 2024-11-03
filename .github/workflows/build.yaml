@@ -39,6 +39,9 @@ jobs:
         run: |
           services=$(go run builder/main.go)
           echo "services=$services" >> $GITHUB_OUTPUT
+      - name: print-services
+        run: |
+          echo "Services: ${{ steps.detect-services.outputs.services }}"
 
   build-and-publish:
     needs: [detect-services, lint]
