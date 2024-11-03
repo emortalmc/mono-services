@@ -48,6 +48,7 @@ jobs:
     needs: [detect-services, lint]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         service: ${{ fromJson(needs.detect-services.outputs.services) }}
     steps:
