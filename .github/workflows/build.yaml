@@ -111,12 +111,12 @@ jobs:
           for service in "${services_array[@]}"; do
             echo "Updating image for $service to ${{ github.sha }}"
             sed -i "s|version: .*|version: ${{ github.sha }}|g" "service/values/$service.yaml"
+            git commit -a -m "Update $service to ${{ github.sha }}"
           done
           
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git commit -a -m "Update images to ${{ github.sha }}" -m "Service(s): $SERVICES"
           git push https://😛:$PUSH_TOKEN@github.com/emortalmc/argocd-deployments.git
         env:
           PUSH_TOKEN: "${{ secrets.DEPLOYMENTS_REPO_TOKEN }}"
