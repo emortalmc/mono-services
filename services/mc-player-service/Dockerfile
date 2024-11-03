@@ -30,4 +30,4 @@ ARG SERVICE_NAME=mc-player-service
 WORKDIR /app
 
 COPY --from=build /build/$SERVICE_NAME /build/services/$SERVICE_NAME/run ./
-CMD ./$SERVICE_NAME
+CMD ["./mc-player-service"]
