@@ -104,8 +104,9 @@ jobs:
         shell: "bash"
         # git commit -a automatically adds files that have been modified
         run: |
-          # loop through services and update image version
+          echo "Services: $SERVICES"
           for service in $SERVICES; do
+            echo "Updating image for $service to ${{ github.sha }}"
             sed -i "s|version: .*|version: ${{ github.sha }}|g" "service/values/$service.yaml"
           done
           
