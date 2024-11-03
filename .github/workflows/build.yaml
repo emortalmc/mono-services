@@ -105,7 +105,10 @@ jobs:
         # git commit -a automatically adds files that have been modified
         run: |
           echo "Services: $SERVICES"
-          for service in $SERVICES; do
+          
+          services_array=($(echo $SERVICES | jq -r '.[]'))
+          
+          for service in "${services_array[@]}"; do
             echo "Updating image for $service to ${{ github.sha }}"
             sed -i "s|version: .*|version: ${{ github.sha }}|g" "service/values/$service.yaml"
           done
