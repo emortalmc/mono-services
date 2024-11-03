@@ -35,7 +35,7 @@ jobs:
       - name: detect-services
         id: detect-services
         run: |
-          services=$(go run builder/main.go)
+          services=$(go run builder/main.go | tail -n 1)
           echo "::set-output name=services::${services}"
 
   build-and-publish:
