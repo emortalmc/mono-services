@@ -30,4 +30,4 @@ ARG SERVICE_NAME=message-handler
 WORKDIR /app
 
 COPY --from=build /build/$SERVICE_NAME /build/services/$SERVICE_NAME/run/config.yaml ./
-CMD ["./$SERVICE_NAME"]
+CMD ./$SERVICE_NAME
