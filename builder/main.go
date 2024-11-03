@@ -238,12 +238,7 @@ func main() {
 	lastSuccessfulBuildSha, err := getLastSuccessfulBuildSha()
 	if err != nil {
 		if errors.Is(err, NoRunsError) { // if no runs, build all services
-			servicesToBuild := make([]string, 0)
-			for _, module := range modules {
-				if strings.HasPrefix(module, servicesPath) {
-					servicesToBuild = append(servicesToBuild, strings.TrimPrefix(module, "services/"))
-				}
-			}
+			servicesToBuild := filterForServices(modules)
 
 			jsonOutput, err := json.Marshal(servicesToBuild)
 			if err != nil {
@@ -262,6 +257,18 @@ func main() {
 		panic(err)
 	}
 	log.Printf("modules: %v\n", modules)
+
+	if shouldBuildAll(changedFiles) {
+		servicesToBuild := filterForServices(modules)
+
+		jsonOutput, err := json.Marshal(servicesToBuild)
+		if err != nil {
+			log.Fatalf("failed to marshal services to build: %v", err)
+		}
+
+		fmt.Println(string(jsonOutput))
+		return
+	}
 
 	changedModules, err := getChangedModules(modules, changedFiles)
 	if err != nil {
@@ -306,6 +313,36 @@ out:
 	}
 
 	fmt.Println(string(jsonOutput))
+}
+
+var buildAllFileTriggers = []string{
+	"builder/main.go",
+	".github/workflows/build.yaml",
+}
+
+// We rebuild all services if any of the following conditions are met:
+// - The builder is changed
+// - The workflow file (.github/workflows/build.yaml) is changed
+func shouldBuildAll(changedFiles []string) bool {
+	for _, file := range changedFiles {
+		if contains(buildAllFileTriggers, file) {
+			log.Printf("build all services as %s was changed\n", file)
+			return true
+		}
+	}
+
+	return false
+}
+
+func filterForServices(modules []string) []string {
+	services := make([]string, 0)
+	for _, module := range modules {
+		if strings.HasPrefix(module, servicesPath) {
+			services = append(services, strings.TrimPrefix(module, "services/"))
+		}
+	}
+
+	return services
 }
 
 func contains(s []string, e string) bool {
