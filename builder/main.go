@@ -305,7 +305,7 @@ out:
 		log.Fatalf("failed to marshal services to build: %v", err)
 	}
 
-	log.Println(string(jsonOutput))
+	fmt.Println(string(jsonOutput))
 }
 
 func contains(s []string, e string) bool {
