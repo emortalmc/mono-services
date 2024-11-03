@@ -46,6 +46,7 @@ jobs:
 
   build-and-publish:
     needs: [detect-services, lint]
+    if: needs.detect-services.outputs.services != '[]' # Only run if there are services to build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
