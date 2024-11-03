@@ -3,6 +3,7 @@ go 1.23
 use (
 	.
 	./libraries/test
+	./services/game-player-data
 	./services/mc-player-service
 	./services/message-handler
 )
