@@ -3,15 +3,15 @@ package kafka
 import (
 	"context"
 	"fmt"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
 	pbmsg "github.com/emortalmc/proto-specs/gen/go/message/relationship"
 	"github.com/emortalmc/proto-specs/gen/go/model/relationship"
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
-"sync"
-"time"
+	"sync"
+	"time"
 )
 
 const writeTopic = "relationship-manager"

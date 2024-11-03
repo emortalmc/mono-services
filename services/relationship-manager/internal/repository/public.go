@@ -2,9 +2,10 @@ package repository
 
 import (
 	"context"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository/model"
 	"github.com/google/uuid"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository/model"
 )
+
 type Repository interface {
 	CreateFriendConnection(ctx context.Context, connection *model.FriendConnection) error
 	GetFriendConnections(ctx context.Context, playerId uuid.UUID) ([]*model.FriendConnection, error)

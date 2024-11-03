@@ -4,18 +4,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository/model"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository/registrytypes"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository/model"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository/registrytypes"
-"sync"
-"time"
+	"sync"
+	"time"
 )
+
 type mongoRepository struct {
 	logger *zap.SugaredLogger
 

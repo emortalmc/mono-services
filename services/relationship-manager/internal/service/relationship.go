@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/kafka"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository/model"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/relationship"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -11,10 +14,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/kafka"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository/model"
 )
+
 type relationshipService struct {
 	relationship.RelationshipServer
 

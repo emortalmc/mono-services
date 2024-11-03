@@ -2,7 +2,7 @@ package clients
 
 import (
 	"fmt"
-	"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/mcplayer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

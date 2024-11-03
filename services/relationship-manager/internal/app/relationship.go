@@ -2,15 +2,15 @@ package app
 
 import (
 	"context"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/clients"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/kafka"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/service"
 	"go.uber.org/zap"
 	"os/signal"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/clients"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/kafka"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/service"
-"sync"
-"syscall"
+	"sync"
+	"syscall"
 )
 
 func Run(cfg *config.Config, logger *zap.SugaredLogger) {

@@ -3,8 +3,8 @@ package kafka
 import (
 	"context"
 	"fmt"
-	"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
-	"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/mcplayer"
 	"github.com/emortalmc/proto-specs/gen/go/message/common"
 	"github.com/emortalmc/proto-specs/gen/go/nongenerated/kafkautils"

@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"errors"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository/model"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository/model"
-"time"
+	"time"
 )
 
 var (

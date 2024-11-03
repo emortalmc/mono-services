@@ -1,4 +1,4 @@
-module github.com/emortalmc/mono-services/services/relationship-manager-service
+module github.com/emortalmc/mono-services/services/relationship-manager
 
 go 1.23
 

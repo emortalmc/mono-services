@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/app"
-	"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/app"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
 	"go.uber.org/zap"
 	"log"
 )

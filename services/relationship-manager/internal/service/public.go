@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/config"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/kafka"
+	"github.com/emortalmc/mono-services/services/relationship-manager/internal/repository"
 	"github.com/emortalmc/proto-specs/gen/go/grpc/relationship"
 	grpczap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"go.uber.org/zap"
@@ -11,10 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"net"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/config"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/kafka"
-"github.com/emortalmc/mono-services/services/relationship-manager-service/internal/repository"
-"sync"
+	"sync"
 )
 
 func RunServices(ctx context.Context, logger *zap.SugaredLogger, wg *sync.WaitGroup, cfg *config.Config,
