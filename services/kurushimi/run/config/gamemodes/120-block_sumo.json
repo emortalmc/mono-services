@@ -1,0 +1,97 @@
+{
+  "id": "block_sumo",
+  "enabled": true,
+  "fleetName": "block-sumo",
+  "priority": 120,
+  "friendlyName": "Block Sumo",
+  "activityNoun": "playing",
+  "minPlayers": 2,
+  "maxPlayers": 12,
+  "displayItem": {
+    "material": "minecraft:fire_charge",
+    "slot": 22,
+    "name": "<gradient:blue:aqua><bold>Block Sumo</bold></gradient>",
+    "lore": [
+      "<gray>Fight other players",
+      "<gray>in a game where your",
+      "<gray>sole goal is to knock",
+      "<gray>other players off the edge!"
+    ]
+  },
+  "displayNpc": {
+    "entityType": "PLAYER",
+    "titles": [
+      "<gradient:blue:aqua><bold>Block Sumo</bold></gradient>"
+    ],
+    "skin": {
+      "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY0ODk0Njk5OTE3OSwKICAicHJvZmlsZUlkIiA6ICI3YmQ1YjQ1OTFlNmI0NzUzODI3NDFmYmQyZmU5YTRkNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJlbW9ydGFsZGV2IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzkxZDdhOWMwODBlZTdjYTZkZjlhYWJlM2I5NTliYWE4MThkYWUzYjQ1ZWI3YWRjMTMwZmYyNjU1YzlkOTRjY2YiCiAgICB9LAogICAgIkNBUEUiIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzIzNDBjMGUwM2RkMjRhMTFiMTVhOGIzM2MyYTdlOWUzMmFiYjIwNTFiMjQ4MWQwYmE3ZGVmZDYzNWNhN2E5MzMiCiAgICB9CiAgfQp9",
+      "signature": "prWY0EtGdAfqt/nc4Vv/sMBcVEb6WMvaRumTk72e/NKe3dUPxmzlDRm6rw/mEE332JND6+sEI9PmDQ4jj/W41cn/XR/uZIBS+1qLE+57slEQA+ds+/kffKt1358JEV5/qyqCnODLVjwsRwazXJstC3eKNByaTQEyZ2jv/mFeAIAOF+0eQqDaaMGgxdIMRvWR8Nj6uIiBFTdCPIw3OYZ5bxqxm8Epr5PppF+sj7ZK0UyQ5/f1UoO9B/YMUt0OW+UlF3NYcMDs5mrg1N8Ajxvqbe8l0X7eWHgSYd0S/FopSCiVVQOQdZHRyhicmzLv6rE+xW03SB8NRfoaEEvSh8+QiLGMcyETeriwdDzdf8H9Iin3vDkVbMyRTAJ5jL/xDkoFDFR5HtNkrwYBRJoVkiWbnWyoBFofAjmmMmGmT5SFABS7I0iWLEoP4EMzqy84zDbpwOOioQz9UFlZV8AqmyEDv8Hx6px20zdR/jPr7tRQgqRhcPyzNsElcNLhkBfHmhpKffkrEPOAaal49rtB+3Jq+nX8Z1VyEZSW4MYnuq91bFZ1ciMzopYulPwP4cZkrGaqV84lxsqStI5+STi105KP4Bws+XDpop1eyPdDuVL/axq3VVkKeRqSoMv+xRYONGZJQgZ1t0WRIsXk7DLsjtx8QgffxqOwjW5CmZR0liSPfYM="
+    }
+  },
+  "partyRestrictions": {
+    "minSize": 1,
+    "maxSize": 12
+  },
+  "maps": {
+    "blocksumo": {
+      "id": "blocksumo",
+      "enabled": true,
+      "friendlyName": "BlockSumo",
+      "priority": 100,
+      "displayItem": {
+        "slot": 0,
+        "material": "minecraft:purple_wool",
+        "name": "<dark_purple><bold>BlockSumo</bold></dark_purple>"
+      }
+    },
+    "castle": {
+      "id": "castle",
+      "enabled": true,
+      "friendlyName": "Castle",
+      "priority": 100,
+      "displayItem": {
+        "slot": 1,
+        "material": "minecraft:dark_oak_log",
+        "name": "<gray><bold>Castle</bold></gray>"
+      }
+    },
+    "end": {
+      "id": "end",
+      "enabled": true,
+      "friendlyName": "End",
+      "priority": 100,
+      "displayItem": {
+        "slot": 2,
+        "material": "minecraft:end_stone",
+        "name": "<light_purple><bold>End</bold></light_purple>"
+      }
+    },
+    "icebs": {
+      "id": "icebs",
+      "enabled": true,
+      "friendlyName": "Ice",
+      "priority": 100,
+      "displayItem": {
+        "slot": 3,
+        "material": "minecraft:ice",
+        "name": "<aqua><bold>Ice</bold></aqua>"
+      }
+    },
+    "ruinsbs": {
+      "id": "ruinsbs",
+      "enabled": true,
+      "friendlyName": "Ruins",
+      "priority": 100,
+      "displayItem": {
+        "slot": 4,
+        "material": "minecraft:mossy_cobblestone",
+        "name": "<green><bold>Ruins</bold></green>"
+      }
+    }
+  },
+  "matchmakerInfo": {
+    "matchMethod": "COUNTDOWN",
+    "selectMethod": "AVAILABLE",
+    "rate": 750000000
+  }
+}

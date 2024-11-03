@@ -1,0 +1,24 @@
+mongodb:
+  uri: mongodb://localhost:27017
+
+kafka:
+  host: localhost
+  port: 9092
+
+namespace: emortalmc
+
+partyService:
+  serviceHost: localhost
+  servicePort: 10006
+
+  settingsServiceHost: localhost
+  settingsServicePort: 10006
+
+lobbyFleetName: "lobby"
+# Delay between each matchmaker run for lobby matches
+lobbyMatchRate: 175_000_000
+lobbyMatchSize: 50
+
+port: 10007
+
+development: true
