@@ -108,14 +108,14 @@ jobs:
           
           services_array=($(echo $SERVICES | jq -r '.[]'))
           
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
           for service in "${services_array[@]}"; do
             echo "Updating image for $service to ${{ github.sha }}"
             sed -i "s|version: .*|version: ${{ github.sha }}|g" "service/values/$service.yaml"
             git commit -a -m "Update $service to ${{ github.sha }}"
           done
-          
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           git push https://😛:$PUSH_TOKEN@github.com/emortalmc/argocd-deployments.git
         env:
