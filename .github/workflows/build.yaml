@@ -3,7 +3,6 @@ name: "Build and push"
 on:
   push:
     branches: [ main ]
-  pull_request: {}
 
 jobs:
   lint:
@@ -59,11 +58,10 @@ jobs:
         run: |
           tag_prefix="ghcr.io/emortalmc/${{ matrix.service }}"
           tags=""
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            short_sha=$(echo "${{ github.event.pull_request.head.sha }}" | cut -c1-7)
-            tags="$tag_prefix:pr-${{ github.event.number }}-$short_sha"
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             tags="$tag_prefix:${{ github.sha }},$tag_prefix:latest"
+          else 
+            tags="$tag_prefix:${{ github.sha }}"
           fi
 
           echo "DOCKER_TAGS=$tags" >> "$GITHUB_ENV"
@@ -90,7 +88,7 @@ jobs:
   deploy:
     needs: [build-and-publish, detect-services]
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' # Only run on main branch, non-PR pushes
+    if: github.ref == 'refs/heads/main' # Only run on main branch
     env:
       SERVICES: ${{ needs.detect-services.outputs.services }}
     steps:
