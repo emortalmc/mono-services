@@ -1,4 +1,10 @@
-Idea for checking if there are differences:
-- Use git diff to check if a module has been modified
-- Analyse the module dependencies to see what modules are affected by the changes
-- Run the build process for all affected modules, taking into account the dependency graph
+# mono-services
+
+A monorepo for all of EmortalMC's microservices. We moved to a monorepo at the start of November 2024.
+
+Apologies that all git history is lost, important contributors are:
+- [Zak Shearman](https://github.com/zakshearman/)
+- [Callum Seabrook](https://github.com/BomBardyGamer)
+- [emortaldev](https://github.com/emortaldev)
+
+
