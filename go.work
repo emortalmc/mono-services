@@ -4,9 +4,11 @@ use (
 	.
 	./libraries/test
 	./services/game-player-data
+	./services/game-tracker
 	./services/matchmaker
 	./services/mc-player-service
 	./services/message-handler
+	./services/party-manager
 	./services/permission-service
 	./services/relationship-manager
 )
