@@ -2,9 +2,11 @@ go 1.23
 
 use (
 	.
+	./libraries/mongo
 	./libraries/test
 	./services/game-player-data
 	./services/game-tracker
+	./services/leaderboard-service
 	./services/matchmaker
 	./services/mc-player-service
 	./services/message-handler
