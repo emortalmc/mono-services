@@ -7,11 +7,22 @@ const (
 	Descending
 )
 
+type period uint8
+
+const (
+	AllTime period = iota
+	Daily
+	Weekly
+	Monthly
+)
+
 type LeaderboardConfig struct {
 	ID string
 
-	Order    order
-	Personal PersonalLeaderboardConfig
+	Order order
+	// EvaluatedPeriods used for certain features like notifying users of position changes in weekly, all time, etc.. leaderboards
+	EvaluatedPeriods []period
+	Personal         PersonalLeaderboardConfig
 }
 
 type PersonalLeaderboardConfig struct {
@@ -23,7 +34,8 @@ var Leaderboards = map[string]LeaderboardConfig{
 	"minesweeperTime": {
 		ID: "minesweeperTime",
 
-		Order: Ascending,
+		Order:            Ascending,
+		EvaluatedPeriods: []period{AllTime, Weekly, Monthly},
 		Personal: PersonalLeaderboardConfig{
 			enabled:    true,
 			storeLimit: 10,
@@ -32,7 +44,8 @@ var Leaderboards = map[string]LeaderboardConfig{
 	"marathonScore": {
 		ID: "marathonScore",
 
-		Order: Descending,
+		Order:            Descending,
+		EvaluatedPeriods: []period{AllTime, Weekly, Monthly},
 		Personal: PersonalLeaderboardConfig{
 			enabled:    true,
 			storeLimit: 10,
