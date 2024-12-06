@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/emortalmc/mono-services/libraries/test"
 	"github.com/emortalmc/mono-services/services/mc-player-service/internal/app"
 	"github.com/emortalmc/mono-services/services/mc-player-service/internal/config"
 	"go.uber.org/zap"
@@ -10,7 +9,6 @@ import (
 )
 
 func main() {
-	test.DoStuff("Hello, world!")
 	cfg, err := config.LoadGlobalConfig()
 	if err != nil {
 		panic(fmt.Sprintf("failed to load config: %v", err))

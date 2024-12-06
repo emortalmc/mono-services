@@ -2,10 +2,9 @@ module github.com/emortalmc/mono-services/services/mc-player-service
 
 go 1.23
 
-replace github.com/emortalmc/mono-services/libraries/test => ../../libraries/test
+//replace github.com/emortalmc/mono-services/libraries/test => ../../libraries/test // Kept for example later
 
 require (
-	github.com/emortalmc/mono-services/libraries/test v0.0.0-00010101000000-000000000000
 	github.com/emortalmc/proto-specs/gen/go v0.0.0-20240927103241-2584fd28e0f9
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
