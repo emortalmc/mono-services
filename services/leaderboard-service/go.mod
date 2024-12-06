@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/emortalmc/proto-specs/gen/go v0.0.0-20241105212932-2443a0a1d8c1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect

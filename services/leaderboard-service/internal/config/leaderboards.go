@@ -1,27 +1,13 @@
 package config
 
-type order uint8
-
-const (
-	Ascending order = iota
-	Descending
-)
-
-type period uint8
-
-const (
-	AllTime period = iota
-	Daily
-	Weekly
-	Monthly
-)
+import lbproto "github.com/emortalmc/proto-specs/gen/go/model/leaderboard"
 
 type LeaderboardConfig struct {
 	ID string
 
-	Order order
+	Order lbproto.SortOrder
 	// EvaluatedPeriods used for certain features like notifying users of position changes in weekly, all time, etc.. leaderboards
-	EvaluatedPeriods []period
+	EvaluatedPeriods []lbproto.Period
 	Personal         PersonalLeaderboardConfig
 }
 
@@ -34,8 +20,8 @@ var Leaderboards = map[string]LeaderboardConfig{
 	"minesweeperTime": {
 		ID: "minesweeperTime",
 
-		Order:            Ascending,
-		EvaluatedPeriods: []period{AllTime, Weekly, Monthly},
+		Order:            lbproto.SortOrder_ASC,
+		EvaluatedPeriods: []lbproto.Period{lbproto.Period_ALL_TIME, lbproto.Period_WEEK, lbproto.Period_MONTH},
 		Personal: PersonalLeaderboardConfig{
 			enabled:    true,
 			storeLimit: 10,
@@ -44,8 +30,8 @@ var Leaderboards = map[string]LeaderboardConfig{
 	"marathonScore": {
 		ID: "marathonScore",
 
-		Order:            Descending,
-		EvaluatedPeriods: []period{AllTime, Weekly, Monthly},
+		Order:            lbproto.SortOrder_DESC,
+		EvaluatedPeriods: []lbproto.Period{lbproto.Period_ALL_TIME, lbproto.Period_WEEK, lbproto.Period_MONTH},
 		Personal: PersonalLeaderboardConfig{
 			enabled:    true,
 			storeLimit: 10,

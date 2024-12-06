@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/emortalmc/mono-services/services/leaderboard-service/internal/config"
+	"github.com/emortalmc/mono-services/services/leaderboard-service/internal/grpc"
 	"github.com/emortalmc/mono-services/services/leaderboard-service/internal/repository"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -26,6 +27,7 @@ func main() {
 		}),
 
 		// gRPC
+		fx.Provide(grpc.RunServices),
 	).Run()
 }
 
@@ -43,6 +45,13 @@ func newZapSugared(log *zap.Logger) *zap.SugaredLogger {
 
 func newRepoMongo(cfg config.Config, lc fx.Lifecycle) (repository.Repository, error) {
 	c, err := repository.NewMongoRepository(cfg.MongoDB)
+
+	lc.Append(fx.Hook{OnStart: c.Start, OnStop: c.Shutdown})
+	return c, err
+}
+
+func startGrpc(log *zap.SugaredLogger, cfg config.Config, repo repository.Repository, lc fx.Lifecycle) (*grpc.GrpcRunner, error) {
+	c, err := grpc.RunServices(log, cfg, repo)
 
 	lc.Append(fx.Hook{OnStart: c.Start, OnStop: c.Shutdown})
 	return c, err
