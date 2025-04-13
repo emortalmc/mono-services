@@ -1,7 +1,6 @@
 go 1.23
 
 use (
-	.
 	./libraries/test
 	./services/game-player-data
 	./services/game-tracker
