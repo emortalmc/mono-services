@@ -223,6 +223,11 @@ func validateDependencyGraph(graph DependencyGraph) {
 	}
 }
 
+type output struct {
+	AllModules      []string `json:"all_modules"`
+	UpdatedServices []string `json:"updated_services"`
+}
+
 // Our process is as follows:
 // 1. Get the list of changed files
 // 2. Get the list of modules (libraries and services) referenced in the go work file
@@ -240,7 +245,7 @@ func main() {
 		if errors.Is(err, NoRunsError) { // if no runs, build all services
 			servicesToBuild := filterForServices(modules)
 
-			jsonOutput, err := json.Marshal(servicesToBuild)
+			jsonOutput, err := json.Marshal(output{AllModules: modules, UpdatedServices: servicesToBuild})
 			if err != nil {
 				log.Fatalf("failed to marshal services to build: %v", err)
 			}
@@ -261,7 +266,7 @@ func main() {
 	if shouldBuildAll(changedFiles) {
 		servicesToBuild := filterForServices(modules)
 
-		jsonOutput, err := json.Marshal(servicesToBuild)
+		jsonOutput, err := json.Marshal(output{AllModules: modules, UpdatedServices: servicesToBuild})
 		if err != nil {
 			log.Fatalf("failed to marshal services to build: %v", err)
 		}
@@ -307,7 +312,7 @@ out:
 		}
 	}
 
-	jsonOutput, err := json.Marshal(servicesToBuild)
+	jsonOutput, err := json.Marshal(output{AllModules: modules, UpdatedServices: servicesToBuild})
 	if err != nil {
 		log.Fatalf("failed to marshal services to build: %v", err)
 	}

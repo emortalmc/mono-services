@@ -1,29 +1,16 @@
-name: "Build and push"
+name: "Build and Deploy Services"
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-go@v4
-        with:
-          go-version: 1.23
-          cache: false
-      - uses: actions/checkout@v4
-      - name: go-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
-          args: --timeout 5m0s
-
-  # Detect services that need to be built via the builder
+  # Detect services and modules, identify those that have been updated
   detect-services:
     runs-on: ubuntu-latest
     outputs:
-      services: ${{ steps.detect-services.outputs.services }}
+      all_modules: ${{ steps.detect-services.outputs.all_modules }}
+      updated_services: ${{ steps.detect-services.outputs.updated_services }}
     steps:
       - uses: actions/setup-go@v4
         with:
@@ -37,19 +24,43 @@ jobs:
         id: detect-services
         run: |
           services=$(go run builder/main.go)
-          echo "Raw services output: $services"
-          echo "services=$services" >> $GITHUB_OUTPUT
-      - name: print-services
+          echo "Raw builder output: $services"
+          all_modules=$(echo "$services" | jq -r '.all_modules | @json')
+          updated_services=$(echo "$services" | jq -r '.updated_services | @json')
+          echo "all_modules=$all_modules" >> $GITHUB_OUTPUT
+          echo "updated_services=$updated_services" >> $GITHUB_OUTPUT
+      - name: Print Detected Services
         run: |
-          echo "Services: ${{ steps.detect-services.outputs.services }}"
+          echo "All Modules: ${{ steps.detect-services.outputs.all_modules }}"
+          echo "Updated Services: ${{ steps.detect-services.outputs.updated_services }}"
 
-  build-and-publish:
-    needs: [detect-services, lint]
-    if: needs.detect-services.outputs.services != '[]' # Only run if there are services to build
+  # Lint all modules
+  lint:
+    needs: detect-services
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson(needs.detect-services.outputs.services) }}
+        module: ${{ fromJson(needs.detect-services.outputs.all_modules) }}
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.23
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Lint Module
+        run: |
+          echo "Linting ${{ matrix.module }}"
+          cd "${{ matrix.module }}" && golangci-lint run ./...
+
+  # Build and push updated services
+  build-and-publish:
+    needs: [detect-services, lint]
+    if: needs.detect-services.outputs.updated_services != '[]' # Only run if there are services to build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.detect-services.outputs.updated_services) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -57,10 +68,9 @@ jobs:
         shell: bash
         run: |
           tag_prefix="ghcr.io/emortalmc/${{ matrix.service }}"
-          tags=""
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             tags="$tag_prefix:${{ github.sha }},$tag_prefix:latest"
-          else 
+          else
             tags="$tag_prefix:${{ github.sha }}"
           fi
 
@@ -85,37 +95,26 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKER_TAGS }}
 
+  # Deploy updated services
   deploy:
-    needs: [build-and-publish, detect-services]
+    needs: [build-and-publish, detect-services, lint]
+    if: needs.detect-services.outputs.updated_services != '[]'
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Only run on main branch
-    env:
-      SERVICES: ${{ needs.detect-services.outputs.services }}
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
+      - uses: actions/checkout@v4
         with:
-          repository: "emortalmc/argocd-deployments"
-          ref: "main"
-          token: "${{ secrets.DEPLOYMENTS_REPO_TOKEN }}"
-
-      - name: "Update image version"
-        shell: "bash"
-        # git commit -a automatically adds files that have been modified
+          repository: emortalmc/argocd-deployments
+          ref: main
+          token: ${{ secrets.DEPLOYMENTS_REPO_TOKEN }}
+      - name: Update Service Versions
+        shell: bash
         run: |
-          echo "Services: $SERVICES"
-          
-          services_array=($(echo $SERVICES | jq -r '.[]'))
-          
+          services=$(echo '${{ needs.detect-services.outputs.updated_services }}' | jq -r '.[]')
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          for service in "${services_array[@]}"; do
+          for service in $services; do
             echo "Updating image for $service to ${{ github.sha }}"
             sed -i "s|version: .*|version: ${{ github.sha }}|g" "service/values/$service.yaml"
             git commit -a -m "Update $service to ${{ github.sha }}"
           done
-          
-          git push https://😛:$PUSH_TOKEN@github.com/emortalmc/argocd-deployments.git
-        env:
-          PUSH_TOKEN: "${{ secrets.DEPLOYMENTS_REPO_TOKEN }}"
+          git push https://😛:${{ secrets.DEPLOYMENTS_REPO_TOKEN }}@github.com/emortalmc/argocd-deployments.git
