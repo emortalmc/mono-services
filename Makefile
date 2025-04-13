@@ -1,5 +1,12 @@
+MODULES := $(shell find . -name "go.mod" -type f -print0 | xargs -0 -I {} dirname {} )
+MAKEFILE_DIR := $(shell pwd)
+
 lint:
-	golangci-lint run
+	@for module in $(MODULES); do \
+		echo "Linting module: $$module"; \
+		cd "$(MAKEFILE_DIR)"; \
+		cd "$$module" && golangci-lint run ./...; \
+	done
 
 go-tidy:
 	go work sync
