@@ -122,6 +122,7 @@ var testMinimumRole = model.Role{
 
 var testUserIds = []uuid.UUID{uuid.New(), uuid.New(), uuid.New()}
 
+// todo this test fails since the default role is created in the mongo repository
 func TestMongoRepository_GetRoles(t *testing.T) {
 	// Setup
 	many, err := database.Collection(roleCollectionName).InsertMany(context.Background(), []interface{}{testRole, testMinimumRole})
