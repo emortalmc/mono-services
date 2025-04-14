@@ -41,13 +41,12 @@ jobs:
     strategy:
       matrix:
         module: ${{ fromJson(needs.detect-services.outputs.all_modules) }}
+      fail-fast: false
     steps:
-      - name: Setup Go
-        uses: actions/setup-go@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: 1.23
-      - name: Checkout Repository
-        uses: actions/checkout@v4
       - name: Lint Module
         uses: golangci/golangci-lint-action@v7
         with:
