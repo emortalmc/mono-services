@@ -18,7 +18,7 @@ func NewPlayerTrackerClient(cfg *config.PlayerTrackerServiceConfig) (mcplayer.Pl
 }
 
 func createConnection(addr string, port uint16) (*grpc.ClientConn, error) {
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", addr, port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(fmt.Sprintf("%s:%d", addr, port), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}

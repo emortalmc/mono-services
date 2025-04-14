@@ -10,9 +10,7 @@ import (
 	"time"
 )
 
-var (
-	AlreadyBlockedError = errors.New("player already blocked")
-)
+var ErrAlreadyBlocked = errors.New("player already blocked")
 
 func (m *mongoRepository) CreatePlayerBlock(ctx context.Context, block *model.PlayerBlock) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -21,7 +19,7 @@ func (m *mongoRepository) CreatePlayerBlock(ctx context.Context, block *model.Pl
 	_, err := m.blockColl.InsertOne(ctx, block)
 
 	if mongo.IsDuplicateKeyError(err) {
-		return AlreadyBlockedError
+		return ErrAlreadyBlocked
 	}
 
 	return err

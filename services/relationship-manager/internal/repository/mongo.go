@@ -28,8 +28,8 @@ type mongoRepository struct {
 }
 
 var (
-	NotFriendsError      = errors.New("players are not friends")
-	NoFriendRequestError = errors.New("no friend request found")
+	ErrNotFriends      = errors.New("players are not friends")
+	ErrNoFriendRequest = errors.New("no friend request found")
 )
 
 func NewMongoRepository(ctx context.Context, logger *zap.SugaredLogger, wg *sync.WaitGroup, cfg *config.MongoDBConfig) (Repository, error) {
@@ -188,7 +188,7 @@ func (m *mongoRepository) DeleteFriendConnection(ctx context.Context, playerId u
 		return err
 	}
 	if result.DeletedCount == 0 {
-		return NotFriendsError
+		return ErrNotFriends
 	}
 	return nil
 }
@@ -266,7 +266,7 @@ func (m *mongoRepository) DeletePendingFriendConnection(ctx context.Context, pla
 		return err
 	}
 	if result.DeletedCount == 0 {
-		return NoFriendRequestError
+		return ErrNoFriendRequest
 	}
 	return nil
 }

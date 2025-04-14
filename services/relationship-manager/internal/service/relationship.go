@@ -159,7 +159,7 @@ func (s *relationshipService) RemoveFriend(ctx context.Context, req *relationshi
 
 	err = s.repo.DeleteFriendConnection(ctx, senderId, targetId)
 	if err != nil {
-		if err == repository.NotFriendsError {
+		if err == repository.ErrNotFriends {
 			return &relationship.RemoveFriendResponse{
 				Result: relationship.RemoveFriendResponse_NOT_FRIENDS,
 			}, nil
@@ -189,7 +189,7 @@ func (s *relationshipService) DenyFriendRequest(ctx context.Context, req *relati
 
 	err = s.repo.DeletePendingFriendConnection(ctx, senderId, targetId)
 	if err != nil {
-		if err == repository.NoFriendRequestError {
+		if err == repository.ErrNoFriendRequest {
 			return &relationship.DenyFriendRequestResponse{
 				Result: relationship.DenyFriendRequestResponse_NO_REQUEST,
 			}, nil
@@ -311,7 +311,7 @@ func (s *relationshipService) CreateBlock(ctx context.Context, req *relationship
 	err = s.repo.CreatePlayerBlock(ctx, &model.PlayerBlock{Id: primitive.NewObjectID(), BlockedId: blockedId, BlockerId: blockerId})
 
 	if err != nil {
-		if err == repository.AlreadyBlockedError {
+		if err == repository.ErrAlreadyBlocked {
 			return &relationship.CreateBlockResponse{
 				Result: relationship.CreateBlockResponse_ALREADY_BLOCKED,
 			}, nil

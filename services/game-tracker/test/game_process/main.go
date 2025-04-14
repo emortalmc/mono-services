@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/emortalmc/mono-services/services/game-tracker/internal/config"
+	"github.com/emortalmc/mono-services/services/game-tracker/internal/utils"
 	"github.com/emortalmc/proto-specs/gen/go/message/gametracker"
 	pbmodel "github.com/emortalmc/proto-specs/gen/go/model/gametracker"
 	"github.com/google/uuid"
+	"github.com/segmentio/kafka-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -103,7 +105,7 @@ func (a *app) writeStartMessage() {
 			Players:    defaultPlayers,
 		},
 		StartTime: timestamppb.Now(),
-		MapId:     "test-map",
+		MapId:     utils.Pointer("test-map"),
 		Content:   []*anypb.Any{tdStartData, teamStartData},
 	}
 

@@ -10,6 +10,7 @@ import (
 	"github.com/emortalmc/mono-services/services/permission-service/internal/utils"
 	"github.com/emortalmc/proto-specs/gen/go/model/permission"
 	"github.com/google/uuid"
+	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
 	"github.com/stretchr/testify/assert"
 	mongoDb "go.mongodb.org/mongo-driver/mongo"

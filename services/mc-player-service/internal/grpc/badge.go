@@ -40,7 +40,7 @@ func (s *badgeService) SetActivePlayerBadge(ctx context.Context, request *pb.Set
 	}
 
 	if err := s.badgeSvc.SetActiveBadge(ctx, playerId, request.BadgeId); err != nil {
-		if errors.Is(err, badge.DoesntHaveBadgeErr) {
+		if errors.Is(err, badge.ErrDoesntHaveBadge) {
 			return nil, setActivePlayerBadgeDoesntHaveBadgeErr
 		} else {
 			return nil, status.Error(codes.Internal, "failed to set active badge: "+err.Error())
@@ -61,7 +61,7 @@ func (s *badgeService) RemoveBadgeFromPlayer(ctx context.Context, request *pb.Re
 
 	err = s.badgeSvc.RemoveBadgeFromPlayer(ctx, playerId, request.BadgeId)
 	if err != nil {
-		if errors.Is(err, badge.DoesntHaveBadgeErr) {
+		if errors.Is(err, badge.ErrDoesntHaveBadge) {
 			return nil, removeBadgeFromPlayerDoesntHaveBadgeErr
 		} else {
 			return nil, status.Error(codes.Internal, "failed to remove badge from player")
@@ -133,9 +133,9 @@ func (s *badgeService) AddBadgeToPlayer(ctx context.Context, request *pb.AddBadg
 
 	err = s.badgeSvc.AddBadgeToPlayer(ctx, playerId, request.BadgeId)
 	if err != nil {
-		if errors.Is(err, badge.AlreadyHasBadgeErr) {
+		if errors.Is(err, badge.ErrAlreadyHasBadge) {
 			return nil, addBadgeToPlayerAlreadyHasBadgeErr
-		} else if errors.Is(err, badge.DoesntExistErr) {
+		} else if errors.Is(err, badge.ErrDoesntExist) {
 			return nil, status.Error(codes.InvalidArgument, "badge does not exist")
 		} else {
 			return nil, status.Error(codes.Internal, "failed to add badge to player")

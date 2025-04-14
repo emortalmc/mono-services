@@ -56,14 +56,14 @@ func NewService(log *zap.SugaredLogger, badgeRepo repository.BadgeReadWriter, pl
 }
 
 var (
-	AlreadyHasBadgeErr = errors.New("player already has this badge")
-	DoesntExistErr     = errors.New("badge does not exist")
+	ErrAlreadyHasBadge = errors.New("player already has this badge")
+	ErrDoesntExist     = errors.New("badge does not exist")
 )
 
 func (s *serviceImpl) AddBadgeToPlayer(ctx context.Context, playerId uuid.UUID, badgeId string) error {
 	badge, ok := s.badgeCfg.Badges[badgeId]
 	if !ok {
-		return DoesntExistErr
+		return ErrDoesntExist
 	}
 
 	modCount, err := s.repo.AddPlayerBadge(ctx, playerId, badgeId)
@@ -72,7 +72,7 @@ func (s *serviceImpl) AddBadgeToPlayer(ctx context.Context, playerId uuid.UUID, 
 	}
 
 	if modCount == 0 {
-		return AlreadyHasBadgeErr
+		return ErrAlreadyHasBadge
 	}
 
 	if badge.Required {
@@ -85,7 +85,7 @@ func (s *serviceImpl) AddBadgeToPlayer(ctx context.Context, playerId uuid.UUID, 
 }
 
 var (
-	DoesntHaveBadgeErr = errors.New("player does not have this badge")
+	ErrDoesntHaveBadge = errors.New("player does not have this badge")
 )
 
 func (s *serviceImpl) RemoveBadgeFromPlayer(ctx context.Context, playerId uuid.UUID, badgeId string) error {
@@ -103,7 +103,7 @@ func (s *serviceImpl) RemoveBadgeFromPlayer(ctx context.Context, playerId uuid.U
 		}
 	}
 	if !removed {
-		return DoesntHaveBadgeErr
+		return ErrDoesntHaveBadge
 	}
 
 	s.log.Debugw("checking active badge", "activeBadge", player.ActiveBadge, "badgeId", badgeId)

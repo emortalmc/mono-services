@@ -35,8 +35,8 @@ func CreateDatabase(ctx context.Context, cfg *config.MongoDBConfig, wg *sync.Wai
 }
 
 func createCodecRegistry() *bsoncodec.Registry {
-	return bson.NewRegistryBuilder().
-		RegisterTypeEncoder(registrytypes.UUIDType, bsoncodec.ValueEncoderFunc(registrytypes.UuidEncodeValue)).
-		RegisterTypeDecoder(registrytypes.UUIDType, bsoncodec.ValueDecoderFunc(registrytypes.UuidDecodeValue)).
-		Build()
+	r := bson.NewRegistry()
+	r.RegisterTypeEncoder(registrytypes.UUIDType, bsoncodec.ValueEncoderFunc(registrytypes.UuidEncodeValue))
+	r.RegisterTypeDecoder(registrytypes.UUIDType, bsoncodec.ValueDecoderFunc(registrytypes.UuidDecodeValue))
+	return r
 }
