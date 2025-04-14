@@ -183,7 +183,7 @@ func (s *permissionService) AddRoleToPlayer(ctx context.Context, req *permission
 
 	// NOTE: err no documents should never be thrown here because if so, we create a new player with role + default role
 	if err != nil {
-		if err == repository.AlreadyHasRoleError {
+		if err == repository.ErrAlreadyHasRole {
 			st := status.New(codes.AlreadyExists, "player already has role")
 			st, _ = st.WithDetails(&permission.AddRoleToPlayerError{ErrorType: permission.AddRoleToPlayerError_ALREADY_HAS_ROLE})
 			return nil, st.Err()
@@ -200,10 +200,10 @@ func (s *permissionService) AddRoleToPlayer(ctx context.Context, req *permission
 
 var (
 	removeRoleFromPlayerPlayerNotFound = panicIfErr(status.New(codes.NotFound, "player not found").
-						WithDetails(&permission.RemoveRoleFromPlayerError{ErrorType: permission.RemoveRoleFromPlayerError_PLAYER_NOT_FOUND})).Err()
+		WithDetails(&permission.RemoveRoleFromPlayerError{ErrorType: permission.RemoveRoleFromPlayerError_PLAYER_NOT_FOUND})).Err()
 
 	removeRoleFromPlayerDoesntHaveRole = panicIfErr(status.New(codes.NotFound, "player does not have role").
-						WithDetails(&permission.RemoveRoleFromPlayerError{ErrorType: permission.RemoveRoleFromPlayerError_DOES_NOT_HAVE_ROLE})).Err()
+		WithDetails(&permission.RemoveRoleFromPlayerError{ErrorType: permission.RemoveRoleFromPlayerError_DOES_NOT_HAVE_ROLE})).Err()
 )
 
 func (s *permissionService) RemoveRoleFromPlayer(ctx context.Context, req *permission.RemoveRoleFromPlayerRequest) (*permission.RemoveRoleFromPlayerResponse, error) {
@@ -214,9 +214,10 @@ func (s *permissionService) RemoveRoleFromPlayer(ctx context.Context, req *permi
 
 	err = s.repo.RemoveRoleFromPlayer(ctx, pId, req.RoleId)
 	if err != nil {
-		if err == mongoDb.ErrNoDocuments {
+		switch err {
+		case mongoDb.ErrNoDocuments:
 			return nil, removeRoleFromPlayerPlayerNotFound
-		} else if err == repository.DoesNotHaveRoleError {
+		case repository.ErrDoesNotHaveRole:
 			return nil, removeRoleFromPlayerDoesntHaveRole
 		}
 		return nil, err

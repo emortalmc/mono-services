@@ -5,6 +5,11 @@ package repository
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"sync"
+	"testing"
+
 	"github.com/emortalmc/mono-services/services/permission-service/internal/config"
 	"github.com/emortalmc/mono-services/services/permission-service/internal/repository/model"
 	"github.com/emortalmc/mono-services/services/permission-service/internal/utils"
@@ -16,10 +21,6 @@ import (
 	mongoDb "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
-	"log"
-	"os"
-	"sync"
-	"testing"
 )
 
 const (
@@ -137,11 +138,12 @@ func TestMongoRepository_GetRoles(t *testing.T) {
 		assert.NotEmpty(t, role.Permissions)
 
 		valRole := *role
-		if role.Id == testRole.Id {
+		switch role.Id {
+		case testRole.Id:
 			assert.Equal(t, testRole, valRole)
-		} else if role.Id == testMinimumRole.Id {
+		case testMinimumRole.Id:
 			assert.Equal(t, testMinimumRole, valRole)
-		} else {
+		default:
 			t.Errorf("unexpected role: %v", valRole)
 		}
 	}
@@ -309,7 +311,7 @@ func TestMongoRepository_AddRoleToPlayer(t *testing.T) {
 
 	// Test that duplicates error, so no cleanup is done.
 	err = repo.AddRoleToPlayer(context.Background(), testUserIds[0], testRole.Id)
-	assert.Equal(t, AlreadyHasRoleError, err)
+	assert.Equal(t, ErrAlreadyHasRole, err)
 
 	cleanup()
 }
@@ -330,9 +332,9 @@ func TestMongoRepository_AddRoleToPlayer2(t *testing.T) {
 }
 
 func TestMongoRepository_RemoveRoleFromPlayer(t *testing.T) {
-	// Test when the user does not exist. DoesNotHaveRoleError should be returned.
+	// Test when the user does not exist. ErrDoesNotHaveRole should be returned.
 	err := repo.RemoveRoleFromPlayer(context.Background(), testUserIds[0], testRole.Id)
-	assert.Equal(t, DoesNotHaveRoleError, err)
+	assert.Equal(t, ErrDoesNotHaveRole, err)
 
 	// Test a valid case with a default user
 	_, err = database.Collection(playerCollectionName).InsertOne(context.Background(), model.Player{
@@ -360,7 +362,7 @@ func TestMongoRepository_RemoveRoleFromPlayer(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = repo.RemoveRoleFromPlayer(context.Background(), testUserIds[0], testRole.Id)
-	assert.Equal(t, DoesNotHaveRoleError, err)
+	assert.Equal(t, ErrDoesNotHaveRole, err)
 
 	cleanup()
 }

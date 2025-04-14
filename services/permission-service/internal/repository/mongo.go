@@ -31,8 +31,8 @@ type mongoRepository struct {
 }
 
 var (
-	AlreadyHasRoleError  = errors.New("player already has testRole")
-	DoesNotHaveRoleError = errors.New("player does not have testRole")
+	ErrAlreadyHasRole  = errors.New("player already has testRole")
+	ErrDoesNotHaveRole = errors.New("player does not have testRole")
 )
 
 func NewMongoRepository(ctx context.Context, logger *zap.SugaredLogger, wg *sync.WaitGroup, cfg config.MongoDBConfig) (Repository, error) {
@@ -187,7 +187,7 @@ func (m *mongoRepository) AddRoleToPlayer(ctx context.Context, playerId uuid.UUI
 			}
 			return nil
 		}
-		return AlreadyHasRoleError
+		return ErrAlreadyHasRole
 	}
 
 	return err
@@ -203,7 +203,7 @@ func (m *mongoRepository) RemoveRoleFromPlayer(ctx context.Context, playerId uui
 		return err
 	}
 	if result.ModifiedCount == 0 {
-		return DoesNotHaveRoleError
+		return ErrDoesNotHaveRole
 	}
 
 	return err

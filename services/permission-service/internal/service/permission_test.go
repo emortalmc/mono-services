@@ -421,7 +421,7 @@ func TestPermissionService_UpdateRole(t *testing.T) {
 type addRoleToPlayerTest struct {
 	roleExists bool
 
-	addRoleErr error // e.g AlreadyHasRoleError
+	addRoleErr error // e.g ErrAlreadyHasRole
 
 	expectedErr func(t *testing.T, err error)
 }
@@ -447,7 +447,7 @@ var addRoleToPlayerTests = map[string]addRoleToPlayerTest{
 	},
 	"already_has_role": {
 		roleExists: true,
-		addRoleErr: repository.AlreadyHasRoleError,
+		addRoleErr: repository.ErrAlreadyHasRole,
 		expectedErr: func(t *testing.T, err error) {
 			assert.Equal(t, codes.AlreadyExists, status.Code(err))
 
@@ -501,7 +501,7 @@ func TestPermissionService_AddRoleToPlayer(t *testing.T) {
 }
 
 type removeRoleFromPlayerTest struct {
-	removeRoleErr error // e.g DoesNotHaveRoleError, mongo.ErrNoDocuments
+	removeRoleErr error // e.g ErrDoesNotHaveRole, mongo.ErrNoDocuments
 
 	expectedErr func(t *testing.T, err error)
 }
@@ -512,7 +512,7 @@ var removeRoleFromPlayerTests = map[string]removeRoleFromPlayerTest{
 		expectedErr:   nil,
 	},
 	"doesnt_have_role": {
-		removeRoleErr: repository.DoesNotHaveRoleError,
+		removeRoleErr: repository.ErrDoesNotHaveRole,
 		expectedErr: func(t *testing.T, err error) {
 			assert.Equal(t, codes.NotFound, status.Code(err))
 
