@@ -49,9 +49,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Lint Module
-        run: |
-          echo "Linting ${{ matrix.module }}"
-          cd "${{ matrix.module }}" && golangci-lint run ./...
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: latest
+          args: ${{ matrix.module }} --timeout 5m0s
 
   # Build and push updated services
   build-and-publish:
