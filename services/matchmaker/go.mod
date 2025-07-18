@@ -1,6 +1,6 @@
 module github.com/emortalmc/mono-services/services/matchmaker
 
-go 1.23
+go 1.23.0
 
 require (
 	agones.dev/agones v1.42.0
@@ -65,7 +65,7 @@ require (
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/oauth2 v0.22.0 // indirect
+	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/term v0.23.0 // indirect
